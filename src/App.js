@@ -1,14 +1,15 @@
 import React, { Component } from 'react';
 import './App.css';
+import TodoMain from './components/TodoMain'
 
 class App extends Component {
-  render() {
-    return (
-      <div>
-        <h1>React ToDo App</h1>
-      </div>
-    );
-  }
+    render() {
+        return (
+            <div>
+                <TodoMain/>
+            </div>
+        );
+    }
 }
 
 export default App;
