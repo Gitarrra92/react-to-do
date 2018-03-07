@@ -32,22 +32,17 @@ class TodoMain extends Component {
             this.setState({todoNameErr: 'Task name can not be empty!'})
             return
         }
-
         let tempTodosList = [];
         tempTodosList = tempTodosList.concat(this.state.todosList);
-
-        tempTodosList.push({
+        tempTodosList = tempTodosList.concat({
             name: this.state.todoName,
             priority: this.state.todoPriority,
             status: this.state.todoStatus,
             id: Date.now(),
         });
-
         localStorage.setItem('todos', JSON.stringify(tempTodosList));
-
         this.setState({
             todoName: '',
-            todoPriority: "0",
             id: '',
             todoNameErr: '',
             todosList: tempTodosList,
@@ -70,6 +65,39 @@ class TodoMain extends Component {
         localStorage.setItem('todos', JSON.stringify(tempTodosList));
         this.setState({todosList: tempTodosList});
     };
+
+    sortTodo = (column, order) => {
+        let todosTemp = []
+        todosTemp = todosTemp.concat(this.state.todosList);
+        switch (column) {
+            case 'name': {
+                if (order)
+                    todosTemp.sort((a, b) => {return b.name.localeCompare(a.name)})
+                else
+                    todosTemp.sort((a, b) => {return a.name.localeCompare(b.name)})
+                break;
+            }
+            case 'priority': {
+                if (order)
+                    todosTemp.sort((a, b) => {return +b.priority - +a.priority})
+                else
+                    todosTemp.sort((a, b) => {return +a.priority - +b.priority})
+                break;
+            }
+            case 'status': {
+                if (order)
+                    todosTemp.sort((a, b) => {return b.status - a.status})
+                else
+                    todosTemp.sort((a, b) => {return a.status - b.status})
+                break;
+            }
+            default: {
+                todosTemp.sort((a, b) => {return a.id - b.id})
+                break;
+            }
+        }
+        this.setState({todosList: todosTemp});
+    }
 
     handleTodoName = (e) => this.setState({todoName: e.target.value});
     handleTodoPriority = (e) => this.setState({todoPriority: e.target.value});
@@ -94,9 +122,10 @@ class TodoMain extends Component {
                                 />
 
                                 <TodoList
-                                    state={this.state}
+                                    todosList={this.state.todosList}
                                     toggleTodoStatus={this.toggleTodoStatus}
                                     deleteTodo={this.deleteTodo}
+                                    sortTodo={this.sortTodo}
                                 />
 
                             </Panel.Body>
